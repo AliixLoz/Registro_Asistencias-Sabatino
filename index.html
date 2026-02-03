@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Registro de Asistencia</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     /* Fondo y centrado */
     body {
@@ -19,16 +20,28 @@
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-      color: white;
+      color: black; /* Texto principal */
       flex-direction: column;
       padding: 20px;
       box-sizing: border-box;
     }
 
+    /* Fondo semi-transparente para mejor lectura */
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background-color: rgba(255, 255, 255, 0.7); /* Fondo claro semitransparente */
+      z-index: -1;
+    }
+
     h1 {
       font-size: 3em;
       margin-bottom: 20px;
-      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
+      color: #000; /* Letras negras para contraste */
+      text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.7);
     }
 
     #status {
@@ -38,32 +51,49 @@
     }
 
     button {
-      padding: 20px 40px;
-      font-size: 1.5em;
-      background: linear-gradient(45deg, #6a11cb, #2575fc);
+      padding: 15px 30px;
+      font-size: 1.3em;
+      background: linear-gradient(45deg, #7d30c0, #70dde7);
       color: white;
       border: none;
-      border-radius: 15px;
+      border-radius: 12px;
       cursor: pointer;
       box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.5);
       transition: all 0.3s ease;
+      width: 80%;
+      max-width: 300px;
     }
 
     button:hover {
-      transform: scale(1.1);
+      transform: scale(1.05);
       box-shadow: 4px 6px 15px rgba(0, 0, 0, 0.7);
     }
 
     p {
       margin: 0;
     }
+
+    /* Responsivo para móviles */
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2em;
+      }
+      #status {
+        font-size: 1.2em;
+      }
+      button {
+        font-size: 1.1em;
+        padding: 12px 25px;
+      }
+    }
   </style>
 </head>
 
 <body>
 
+  <div class="overlay"></div> <!-- fondo semi-transparente -->
   <h1>Registro de Asistencia</h1>
-  <p id="status">⌛ Obteniendo ubicación, por favor espera...</p>
+  <p id="status">⌛ Obteniendo ubicación, espera...</p>
 
   <script>
     const latPermitida = 19.327193;
@@ -82,7 +112,7 @@
 
     function mostrarBoton() {
       const boton = document.createElement("button");
-      boton.innerText = "✅ Registrar asistencia";
+      boton.innerText = "Da click aquí";
       boton.onclick = () => window.open(formURL, "_blank");
       document.body.appendChild(boton);
       document.getElementById("status").style.display = "none";
@@ -114,7 +144,7 @@
         },
         () => {
           const status = document.getElementById("status");
-          status.innerText = "⚠️ Debes permitir el acceso a tu ubicación para registrar asistencia.";
+          status.innerText = "⚠️ Debes permitir el acceso a tu ubicación para registrar tu asistencia.";
           status.style.color = "#FFD93D";
         },
         { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
