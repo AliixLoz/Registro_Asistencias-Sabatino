@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Registro de Asistencia</title>
+</head>
+<body style="text-align:center; font-family:Arial, sans-serif; padding-top:50px;">
+
+<h1>Registro de Asistencia</h1>
+<p>Permite tu ubicación para registrar tu asistencia</p>
+
+<script>
+const latPermitida = 19.327193;
+const lngPermitida = -98.218104;
+const radioPermitido = 100; // metros
+const formURL = "https://docs.google.com/forms/d/e/1FAIpQLSfiG8mCoqCqcFaUDj-iz4kHKlyWP7LG4asp2AAAkEl2tsKeig/viewform?usp=header";
+
+function calcularDistancia(lat1, lon1, lat2, lon2) {
+  const R = 6371000;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLon/2)**2;
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c;
+}
+
+function validarUbicacion() {
+  if(!navigator.geolocation) {
+    alert("Tu navegador no soporta ubicación");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
+      const distancia = calcularDistancia(lat, lng, latPermitida, lngPermitida);
+
+      if(distancia <= radioPermitido){
+        const boton = document.createElement("button");
+        boton.innerText = "✅ Registrar asistencia";
+        boton.style.padding = "15px 30px";
+        boton.style.fontSize = "16px";
+        boton.style.background = "#4CAF50";
+        boton.style.color = "white";
+        boton.style.border = "none";
+        boton.style.borderRadius = "8px";
+        boton.style.cursor = "pointer";
+        boton.onclick = () => window.open(formURL, "_blank");
+        document.body.appendChild(boton);
+      } else {
+        const msg = document.createElement("p");
+        msg.innerText = "❌ Ubicación no válida. Debes estar en el lugar autorizado.";
+        msg.style.color = "red";
+        msg.style.fontSize = "18px";
+        document.body.appendChild(msg);
+      }
+    },
+    () => alert("Debes permitir la ubicación para registrar asistencia")
+  );
+}
+
+window.onload = validarUbicacion;
+</script>
+
+</body>
+</html>
